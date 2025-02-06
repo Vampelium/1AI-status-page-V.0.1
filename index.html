@@ -141,8 +141,6 @@ function updateChartColor(statusCode) {
 }
 
 // Function to shift the statusData array for daily simulation
-// In real scenario, you might store data daily or on each check.
-// We'll just shift once per day in a real use-case, but let's keep it for demonstration.
 function shiftData(newStatus) {
   // Remove the oldest status
   statusData.shift();
@@ -150,7 +148,16 @@ function shiftData(newStatus) {
   statusData.push(newStatus);
 }
 
-// We'll define a function to check the page availability.
+// Function to simulate daily updates
+function simulateDailyUpdate() {
+  setInterval(() => {
+    const newStatus = Math.floor(Math.random() * 4); // Simulating a random status: 0, 1, 2, or 3
+    shiftData(newStatus);
+    statusChart.update();
+  }, 86400000); // 86400000 ms = 1 day
+}
+
+// Function to check the page availability.
 async function checkStatus() {
   let statusMessage = document.getElementById('statusMessage');
 
@@ -163,10 +170,6 @@ async function checkStatus() {
       updateChartColor(response.status);
       statusMessage.textContent = `Status Code: ${response.status} - There seems to be an issue.`;
       statusMessage.style.backgroundColor = '#ff0000';
-      if (response.status === 500) {
-        // Pre-set message for 500
-        alert('Our site is down with a 500 error!');
-      }
     } else {
       // If all good, let's assume up for demonstration
       shiftData(1); // up
@@ -189,8 +192,8 @@ async function checkStatus() {
 // Immediately check status on page load
 checkStatus();
 
-// Then check status every 5 seconds
-setInterval(checkStatus, 5000);
+// Simulate daily updates instead of every second
+simulateDailyUpdate();
 </script>
 
 </body>
